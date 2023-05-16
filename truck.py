@@ -5,6 +5,8 @@ class Truck:
         self.driver = False
         self.miles_traveled = 0
         self.packages = []
+        # Initial WGU address
+        self.location = "4001 South 700 East"
 
     def add_package(self, package):
         self.carrying_capacity -= 1
@@ -19,6 +21,7 @@ class Truck:
 
     def remove_driver(self):
         self.driver = False
+
 
     #def __str__(self):
 
