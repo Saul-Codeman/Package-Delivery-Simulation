@@ -22,6 +22,8 @@ with open('Data/packages.csv') as packages:
 
 # Create hashmap for packages
 packages_hash = HashMap()
+# Create hashmap for time and packages or truck
+snapshot_hash = HashMap()
 
 # Add packages to hash table
 for row in CSV_packages:
@@ -104,10 +106,18 @@ def deliver_packages(truck, time):
     remaining_packages = truck.packages[:]
     # Truck starting location at WGU
     truck_location = get_addressID(truck.location)
+    # Set start time of truck departure
+    truck.departure_time = time.time
+    # Change all package status' to En Route
+    for id in remaining_packages:
+        package = packages_hash.get(id)
+        package.place_on_truck()
+
     # Go through all packages in truck
     while remaining_packages:
         # Next package to be delivered
-        package_location = get_addressID(packages_hash.get(remaining_packages[0]).address)
+        package = packages_hash.get(remaining_packages[0])
+        package_location = get_addressID(package.address)
         # Distance to package location
         distance = get_distance(truck_location, package_location)
         # Add distance to miles traveled
@@ -116,29 +126,38 @@ def deliver_packages(truck, time):
         # print(f"{truck_location} + {distance} + {package_location}")
         # Update the time
         time.update_time(distance, truck.speed)
+        truck.travel_time = time.time - 8
         # Move the truck location to the package location
         truck_location = package_location
+        # Change package status to Delivered
+        package.deliver()
         # Remove package from truck
         remaining_packages.remove(remaining_packages[0])
+
     # Return to WGU
     distance = get_distance(truck_location, get_addressID("4001 South 700 East"))
     truck.miles_traveled += distance
     time.update_time(distance, truck.speed)
+    truck.return_time = time.time
+    truck.travel_time = time.time - truck.departure_time
     truck_location = "4001 South 700 East"
     truck.location = truck_location
 
 
 
-print(f"Truck 1: {truck1.miles_traveled} Truck 2: {truck2.miles_traveled} Truck 3: {truck3.miles_traveled}")
-print(f"Time 1: {time1.time} Time 2: {time2.time}")
+truck1.print_metrics(1)
+truck2.print_metrics(2)
+truck3.print_metrics(3)
 # Deliver packages for trucks 1 and 2
 deliver_packages(truck1, time1)
 deliver_packages(truck2, time2)
-print(f"Time 1: {time1.time} Time 2: {time2.time}")
+truck1.print_metrics(1)
+truck2.print_metrics(2)
 # Determine which truck arrived first to begin truck 3 delivery
 if time1.time > time2.time:
+    # Have truck wait until 10:15 to deliver next package
     deliver_packages(truck3, time2)
 else:
+    # Have truck wait until 10:15 to deliver next package
     deliver_packages(truck3, time1)
-print(f"Time 1: {time1.time} Time 2: {time2.time}")
-print(f"Truck 1: {truck1.miles_traveled} Truck 2: {truck2.miles_traveled} Truck 3: {truck3.miles_traveled}")
+truck3.print_metrics(3)
