@@ -44,3 +44,12 @@ class HashMap:
         for item in self.map:
             if item is not None:
                 print(str(item))
+
+    def print_all_packages(self):
+        IDs = [str(i) for i in range(1, 41)]
+        for id in IDs:
+            package = self.get(id)
+            if package is not None:
+                print(package)
+            else:
+                print(f"No package with ID: {id}")

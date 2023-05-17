@@ -14,6 +14,7 @@ class Package:
         self.status = "At Hub"
         self.on_truck = False
         self.delivered = False
+        self.time_delivered = None
 
     def status(self):
         if self.on_truck:
@@ -27,11 +28,42 @@ class Package:
         self.on_truck = True
         self.status = "En Route"
 
-    def deliver(self):
+    def deliver(self, time):
         self.on_truck = False
         self.delivered = True
         self.status = "Delivered"
+        self.time_delivered = time
+
+    def format_time_am_pm(self, hours_float):
+        # Calculate hour and minutes
+        hours = int(hours_float)
+        minutes = int((hours_float - hours) * 60)
+
+        # Calculate am or pm
+        am_pm = "AM" if hours < 12 else "PM"
+
+        # Adjust hour for 12-hour format
+        hours %= 12
+        if hours == 0:
+            hours = 12
+
+        return f"{hours:02d}:{minutes:02d} {am_pm}"
 
     def __str__(self):
-        return f"Package ID: {self.id}, Address: {self.address}, City: {self.city}, State: {self.state}, Zip: {self.zip}, Deadline: {self.deadline}, Weight: {self.weight}, Note: {self.note}, Status: {self.status}"
+        # ANSI color codes
+        RED = '\033[91m'
+        YELLOW = '\033[93m'
+        GREEN = '\033[92m'
+        END = '\033[0m'
+
+        if self.status == 'At Hub':
+            status = f'{RED}{self.status}{END}'
+        elif self.status == 'En Route':
+            status = f'{YELLOW}{self.status}{END}'
+        elif self.status == 'Delivered':
+            status = f'{GREEN}{self.status} at {self.format_time_am_pm(self.time_delivered)}{END}'
+        else:
+            status = self.status
+
+        return f"Package ID: {self.id}, Status: {status}, Address: {self.address}, City: {self.city}, State: {self.state}, Zip: {self.zip}, Deadline: {self.deadline}, Weight: {self.weight}, Note: {self.note}"
 

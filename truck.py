@@ -28,15 +28,15 @@ class Truck:
 
     def print_metrics(self, truck_number):
         print("-------------------------------")
-        print(f"Truck {truck_number}")
+        print(f"Truck {truck_number} Metrics")
         print(f"Departure Time: {self.format_time_am_pm(self.departure_time)}")
         if self.return_time == None:
             print("Return Time: Has not arrived")
         else:
             print(f"Return Time: {self.format_time_am_pm(self.return_time)}")
-        print(f"Travel Time: {self.format_time(self.travel_time)}")
+        print(f"Travel Time: {self.format_time(self.travel_time)} hours")
         print(f"Miles Traveled: {self.miles_traveled} miles")
-        print("-------------------------------")
+        print(f"Truck Location: {self.location}")
 
     def format_time_am_pm(self, hours_float):
         # Calculate hour and minutes
