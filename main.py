@@ -57,6 +57,9 @@ def get_addressID(address):
     for row in CSV_addresses:
         if address in row[2]:
             return int(row[0])
+    # Detects an error in the packages CSV where 3575 W Valley Central Station bus Loop was 3575 W Valley Central Sta bus Loop
+    print(f"Warning: Address '{address}' not found in CSV_addresses")
+    return None
 
 # Get distance between two addresses. Will likely use truck.location and package.address
 def get_distance(sourceID, destinationID):
@@ -69,7 +72,7 @@ def get_distance(sourceID, destinationID):
 def sort_packages(truck):
     # Create a copy of trucks.packages to use to sort the order for delivery
     remaining_packages = truck.packages[:]
-    # Create an empty list to holded the packages being sorted
+    # Create an empty list to hold the packages being sorted
     sorted_packages = []
     # Truck's current location at WGU
     current_location = get_addressID(truck.location)
@@ -109,17 +112,33 @@ def deliver_packages(truck, time):
         distance = get_distance(truck_location, package_location)
         # Add distance to miles traveled
         truck.miles_traveled += distance
+        #
+        # print(f"{truck_location} + {distance} + {package_location}")
         # Update the time
         time.update_time(distance, truck.speed)
-        #
-        print(f"{truck_location} + {distance} + {package_location}")
         # Move the truck location to the package location
         truck_location = package_location
         # Remove package from truck
         remaining_packages.remove(remaining_packages[0])
+    # Return to WGU
+    distance = get_distance(truck_location, get_addressID("4001 South 700 East"))
+    truck.miles_traveled += distance
+    time.update_time(distance, truck.speed)
+    truck_location = "4001 South 700 East"
+    truck.location = truck_location
 
 
 
-print(truck1.miles_traveled)
+print(f"Truck 1: {truck1.miles_traveled} Truck 2: {truck2.miles_traveled} Truck 3: {truck3.miles_traveled}")
+print(f"Time 1: {time1.time} Time 2: {time2.time}")
+# Deliver packages for trucks 1 and 2
 deliver_packages(truck1, time1)
-print(truck1.miles_traveled)
+deliver_packages(truck2, time2)
+print(f"Time 1: {time1.time} Time 2: {time2.time}")
+# Determine which truck arrived first to begin truck 3 delivery
+if time1.time > time2.time:
+    deliver_packages(truck3, time2)
+else:
+    deliver_packages(truck3, time1)
+print(f"Time 1: {time1.time} Time 2: {time2.time}")
+print(f"Truck 1: {truck1.miles_traveled} Truck 2: {truck2.miles_traveled} Truck 3: {truck3.miles_traveled}")
