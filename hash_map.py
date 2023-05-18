@@ -1,3 +1,5 @@
+# Hashmap developed using the video by Joe James "Python: Creating a HASHMAP using Lists"
+# Link: https://www.youtube.com/watch?v=9HFbhPscPU0
 class HashMap:
     def __init__(self):
         self.size = 64

@@ -164,6 +164,10 @@ def run_with_stop_time(stop_time):
     truck1.packages = ["1", "2", "13", "14", "15", "16", "19", "20", "21", "29", "30", "34", "37", "40"]
     truck2.packages = ["3", "6", "18", "25", "26", "28", "31", "32", "36", "38"]
     truck3.packages = ["4", "5", "7", "8", "9", "10", "11", "12", "17", "22", "23", "24", "27", "33", "35", "39"]
+
+    # Reset package status
+    for i in range(1, 41):
+        packages_hash.get(str(i)).status = "At Hub"
     # Instantiate time objects to keep track of truck delivery times
     time1 = Time()
     time2 = Time()
@@ -173,9 +177,6 @@ def run_with_stop_time(stop_time):
     # Truck 2 leaves at 9:05
     time2.time = 9.084
     deliver_packages(truck2, time2, stop_time)
-
-    truck1.print_metrics(1)
-    truck2.print_metrics(2)
 
     # Prevent truck 3 from going out if time stops before going out for delivery
     if stop_time >= time1.time or stop_time >= time2.time:
@@ -199,6 +200,9 @@ def run_with_stop_time(stop_time):
                 packages_hash.get("9").address = "410 S State St"
                 deliver_packages(truck3, time1, stop_time)
 
+    # Print Truck metrics
+    truck1.print_metrics(1)
+    truck2.print_metrics(2)
     truck3.print_metrics(3)
     print("-------------------------------")
     print(f"Combined Mileage: {truck1.miles_traveled + truck2.miles_traveled + truck3.miles_traveled} miles")
@@ -206,38 +210,85 @@ def run_with_stop_time(stop_time):
 
 
 # Beginning of user interface
+# Got inspiration for user interface from Josh Madakor on Youtube
 print("Western Governors University Parcel Service")
 print("Delivery complete for all trucks!")
+# Stop time used and packages delivered
+stop_time = Time()
+stop_time.time = 18
+run_with_stop_time(stop_time.time)
 while True:
-    # Stop time provided by user to get a snapshot of the trucks and packages at the time
-    stop_time = Time()
-    stop_time.time = 18
-    run_with_stop_time(stop_time.time)
     print()
-    user_choice = input("What would you like to check? (Enter 'p' for package information, or 'e' to exit)\n"
-                        "p - Lookup package information\n"
+    user_choice = input("What would you like to check?\n"
                         "t - Package and truck status at given time\n"
+                        "p - Lookup package by ID\n"
+                        "a - Lookup package by address\n"
+                        "d - Lookup package by deadline\n"
+                        "c - Lookup package by city\n"
+                        "z - Lookup package by zip code\n"
+                        "w - Lookup package by weight\n"
+                        "s - Lookup package by status\n"
                         "e - exit\n"
                         "> ")
-    if user_choice.lower() == "p":
-        print()
-        user_choice = input("Pick a lookup to perform on packages.\n"
-              "t - Package and truck status at given time\n"
-              "i - Lookup by package ID \n"
-              "a - Lookup by address\n"
-              "d - Lookup by deadline\n"
-              "c - Lookup by city\n"
-              "z - Lookup by zip\n"
-              "w - Lookup by weight\n"
-              "s - Lookup by status\n")
-
-    elif user_choice.lower() == "t":
+    if user_choice.lower() == "t":
         print()
         # Stop time provided by user to get a snapshot of the trucks and packages at the time
-        stop = time_to_float(input("What time would you like to check (HH:mm)? "))
+        stop = time_to_float(input("What time would you like to check (HH:mm, Example: 14:00)? "))
         stop_time.time = stop
         run_with_stop_time(stop_time.time)
         packages_hash.print_all_packages()
+    elif user_choice.lower() == "p":
+        print()
+        package_id = input("Please pick a package ID (1-40) to lookup. ")
+        print(packages_hash.get(package_id))
+    elif user_choice.lower() == "a":
+        package_address = input("Please enter a package address to lookup. ")
+        packages_with_address = []
+        for i in range(1, 41):
+            if packages_hash.get(str(i)).address == package_address:
+                packages_with_address.append(packages_hash.get(str(i)))
+        for package in packages_with_address:
+            print(str(package))
+    elif user_choice.lower() == "d":
+        package_deadline = input("Please enter a package deadlined to lookup. ")
+        packages_with_deadline = []
+        for i in range(1, 41):
+            if packages_hash.get(str(i)).deadline == package_deadline:
+                packages_with_deadline.append(packages_hash.get(str(i)))
+        for package in packages_with_deadline:
+            print(str(package))
+    elif user_choice.lower() == "c":
+        package_city = input("Please enter a city to lookup. ")
+        packages_with_city = []
+        for i in range(1, 41):
+            if packages_hash.get(str(i)).city == package_city:
+                packages_with_city.append(packages_hash.get(str(i)))
+        for package in packages_with_city:
+            print(str(package))
+    elif user_choice.lower() == "z":
+        package_zip = input("Please enter a zip code to lookup. ")
+        packages_with_zip = []
+        for i in range(1, 41):
+            if packages_hash.get(str(i)).zip == package_zip:
+                packages_with_zip.append(packages_hash.get(str(i)))
+        for package in packages_with_zip:
+            print(str(package))
+    elif user_choice.lower() == "w":
+        package_weight = input("Please enter a package weight (in Kilos) to lookup. ")
+        packages_with_weight = []
+        for i in range(1, 41):
+            if packages_hash.get(str(i)).weight == package_weight:
+                packages_with_weight.append(packages_hash.get(str(i)))
+        for package in packages_with_weight:
+            print(str(package))
+    elif user_choice.lower() == "s":
+        package_status = input("Please enter a package status to lookup (En Route, At Hub, Delivered). ")
+        packages_with_status = []
+        for i in range(1, 41):
+            if packages_hash.get(str(i)).status.lower() == package_status.lower():
+                packages_with_status.append(packages_hash.get(str(i)))
+        for package in packages_with_status:
+            print(str(package))
     elif user_choice.lower() == "e":
         break
     else:
