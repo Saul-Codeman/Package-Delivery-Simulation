@@ -250,7 +250,7 @@ while True:
         for package in packages_with_address:
             print(str(package))
     elif user_choice.lower() == "d":
-        package_deadline = input("Please enter a package deadlined to lookup. ")
+        package_deadline = input("Please enter a package deadline to lookup. ")
         packages_with_deadline = []
         for i in range(1, 41):
             if packages_hash.get(str(i)).deadline == package_deadline:
