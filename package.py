@@ -7,6 +7,7 @@ class Package:
         self.zip = zip
         self.deadline = deadline
         self.weight = weight
+        # Check if the package has a note
         if note is None:
             self.note = 'No note'
         else:
@@ -16,6 +17,7 @@ class Package:
         self.delivered = False
         self.time_delivered = None
 
+    # Give the status value a string
     def status(self):
         if self.on_truck:
             self.status = "En Route"
@@ -24,16 +26,19 @@ class Package:
         else:
             self.status = "At Hub"
 
+    # Changes the package status to en route
     def place_on_truck(self):
         self.on_truck = True
         self.status = "En Route"
 
+    # Changes the package status to delivered and gives a time
     def deliver(self, time):
         self.on_truck = False
         self.delivered = True
         self.status = "Delivered"
         self.time_delivered = time
 
+    # Formats time
     def format_time_am_pm(self, hours_float):
         # Calculate hour and minutes
         hours = int(hours_float)
@@ -49,6 +54,7 @@ class Package:
 
         return f"{hours:02d}:{minutes:02d} {am_pm}"
 
+    # String value to print packages
     def __str__(self):
         # ANSI color codes
         RED = '\033[91m'

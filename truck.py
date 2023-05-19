@@ -2,6 +2,7 @@ class Truck:
     def __init__(self):
         self.carrying_capacity = 16
         self.speed = 18
+        # List of package IDs on the truck
         self.packages = []
         # Initial WGU address
         self.location = "4001 South 700 East"
@@ -11,14 +12,17 @@ class Truck:
         self.miles_traveled = 0
         self.travel_time = 0
 
+    # Adds a package to the truck
     def add_package(self, package):
         self.carrying_capacity -= 1
         self.packages.append(package)
 
+    # Delivers the package to the destination
     def deliver_package(self, package):
         self.carrying_capacity += 1
         self.packages.remove(package)
 
+    # Prints the truck's metrics
     def print_metrics(self, truck_number):
         print("-------------------------------")
         print(f"Truck {truck_number} Metrics")
@@ -31,6 +35,7 @@ class Truck:
         print(f"Miles Traveled: {self.miles_traveled} miles")
         print(f"Truck Location: {self.location}")
 
+    # Formats time with am and pm
     def format_time_am_pm(self, hours_float):
         # Calculate hour and minutes
         hours = int(hours_float)
@@ -45,10 +50,10 @@ class Truck:
             hours = 12
 
         return f"{hours:02d}:{minutes:02d} {am_pm}"
+    # Formats time without am and pm
     def format_time(self, hours_float):
         # Calculate hour and minutes
         hours = int(hours_float)
         minutes = int((hours_float - hours) * 60)
         return f"{hours:02d}:{minutes:02d}"
-    #def __str__(self):
 

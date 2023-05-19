@@ -1,7 +1,9 @@
+# Time class used to keep track of time while delivering packages
 class Time:
     def __init__(self):
         # Time starts at 8am
         self.time = 8
+    # Updates the time given miles traveled and speed of the truck
     def update_time(self, miles, speed):
         # Calculate the travel time in hours
         travel_time = miles/speed
@@ -10,6 +12,7 @@ class Time:
         if self.time > 24:
             self.time -= 24
 
+    # Gives the string to print time
     def __str__(self):
         # Calculate hour and minutes
         hour = int(self.time)

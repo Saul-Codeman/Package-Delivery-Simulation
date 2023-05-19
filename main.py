@@ -217,6 +217,7 @@ print("Delivery complete for all trucks!")
 stop_time = Time()
 stop_time.time = 18
 run_with_stop_time(stop_time.time)
+# Allows the user to interact with the program and perform lookups and check times
 while True:
     print()
     user_choice = input("What would you like to check?\n"
